@@ -1,35 +1,28 @@
 import cStringIO, base64
-from flask import Flask, request
-import cgi
 import Image, ImageDraw, ImageFont
+import sys
 
-app = Flask(__name__)
+txt = sys.argv[1]
+font_size = int(sys.argv[2])
+font_name = sys.argv[3]
 
-@app.route("/")
-def hello():
-	query = cgi.parse_qs(request.query_string)
-	print(query)
-
-	txt = query['text'][0]
-	font_name = query['font'][0]
-	font_size = int(query['size'][0])
-
-	image = Image.new("RGBA", (font_size*len(txt) + 5, font_size + 5), (0,0,0,0))
-	draw = ImageDraw.Draw(image)
-	try:
-		font = ImageFont.truetype("resources/" + font_name + ".ttf", font_size)
-	except:
+try:
+	font = ImageFont.truetype("resources/" + font_name + ".ttf", font_size)
+except Exception as e:
+	if type(e) == IOError:
 		font = ImageFont.truetype("resources/helvetica.ttf", font_size)
+	else:
+		raise e
 
-	draw.text((5, 0), txt, (0,0,0), font=font)
-	image = image.crop(image.getbbox())
-	buffer = cStringIO.StringIO()
-	image.save(buffer, format="PNG")
-	return "<img src=\"data:image/png;base64," + base64.b64encode(buffer.getvalue()) + "\"/>"
+image = Image.new("RGBA", ( font_size*(len(txt) + (1/5) ), font_size*2), (0,0,0,0))
+draw = ImageDraw.Draw(image)
 
+draw.text((font_size/5, 0), txt, (0,0,0), font=font)
 
-if __name__ == "__main__":
-    # port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=5000, threaded=True)
+image = image.crop(image.getbbox())
+buffer = cStringIO.StringIO()
 
+image.save(buffer, format="PNG")
+
+print base64.b64encode(buffer.getvalue())
 
