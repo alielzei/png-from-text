@@ -14,10 +14,10 @@ except Exception as e:
 	else:
 		raise e
 
-image = Image.new("RGBA", ( font_size*(len(txt) + (1/5) ), font_size*2), (0,0,0,0))
+image = Image.new("RGBA", ( font_size * (len(txt)+1), font_size * 2), (0,0,0,0))
 draw = ImageDraw.Draw(image)
 
-draw.text((font_size/5, 0), txt, (0,0,0), font=font)
+draw.text((font_size, 0), txt, (0,0,0), font=font)
 
 image = image.crop(image.getbbox())
 buffer = cStringIO.StringIO()
