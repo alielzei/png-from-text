@@ -1,5 +1,5 @@
 import cStringIO, base64
-import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 import sys
 
 txt = sys.argv[1]
