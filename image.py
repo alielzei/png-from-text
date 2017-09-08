@@ -24,6 +24,6 @@ buffer = cStringIO.StringIO()
 
 image.save(buffer, format="PNG")
 
-print base64.b64encode(buffer.getvalue())
+print(base64.b64encode(buffer.getvalue()));
 
 
